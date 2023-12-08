@@ -1,30 +1,51 @@
-class Node:
-    def __init__(self, data):
-        self.data = data
-        self.left = None
-        self.right = None
+#include <stdio.h>
+#include <stdlib.h>
 
-def insert(root, data):
-    if root is None:
-        return Node(data)
-    else:
-        if data <= root.data:
-            root.left = insert(root.left, data)
-        else:
-            root.right = insert(root.right, data)
-    return root
+typedef struct Node {
+  int data;
+  struct Node *left;
+  struct Node *right;
+} Node;
 
-def postorder(root):
-    if root is not None:
-        postorder(root.left)
-        postorder(root.right)
-        print(root.data)
+Node *insert(Node *root, int data) {
+  if (root == NULL) {
+    Node *new_node = (Node *)malloc(sizeof(Node));
+    new_node->data = data;
+    new_node->left = NULL;
+    new_node->right = NULL;
+    return new_node;
+  } else {
+    if (data <= root->data) {
+      root->left = insert(root->left, data);
+    } else {
+      root->right = insert(root->right, data);
+    }
+    return root;
+  }
+}
 
-# Driver code
-root = None
-for i in range(7):
-    data = int(input("Enter element: "))
-    root = insert(root, data)
+void postorder(Node *root) {
+  if (root != NULL) {
+    postorder(root->left);
+    postorder(root->right);
+    printf("%d ", root->data);
+  }
+}
 
-print("Postorder traversal of the BST:")
-postorder(root)
+int main() {
+  Node *root = NULL;
+  int i;
+
+  for (i = 0; i < 7; i++) {
+    int data;
+    printf("Enter element: ");
+    scanf("%d", &data);
+    root = insert(root, data);
+  }
+
+  printf("Postorder traversal of the BST: ");
+  postorder(root);
+  printf("\n");
+
+  return 0;
+}
